@@ -104,6 +104,11 @@ export function JevLine({ operator }: { operator: boolean }) {
       <span className="text-ink/60">
         {unavailable ? `Jev unavailable (${unavailable.reason}) since ${clock(unavailable.since)} — Haiku does Jev's work` : "Jev in use"}
       </span>
+      {operator && enabled && unavailable && (
+        <Button variant="secondary" size="sm" loading={write.busy === "jev-retry"} onClick={() => void write.run("jev-retry", () => api.accounts.setJev({ enabled: true })).then((ok) => ok && q.refetch())} className="max-md:h-11">
+          Retry Jev now
+        </Button>
+      )}
       {operator && (
         <Button variant="secondary" size="sm" loading={write.busy === "jev"} onClick={() => void write.run("jev", () => api.accounts.setJev({ enabled: !enabled })).then((ok) => ok && q.refetch())} className="max-md:h-11">
           {enabled ? "Turn Jev off" : "Turn Jev on"}
